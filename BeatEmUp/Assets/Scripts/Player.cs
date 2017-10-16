@@ -7,33 +7,41 @@ public class Player : MonoBehaviour {
 	public float maxSpeed = 4;
 	public float jumpForce = 400;
 	public float minHeight, maxHeight;
+	public int damage;
+	public float health = 100;
+	public float health_Decrease;
+	public float health_Increase;
 
 	private float currentSpeed;
 	private Rigidbody rb; //Lo vamos a usar para el movimiento del personaje
-	private Animator anim; //Falsearemos la transición de las animaciones
+	//private Animator anim; //Falsearemos la transición de las animaciones
 	private Transform groundCheck; 
 	private bool onGround;
 	private bool isDead = false; //Verificar si el player está muerto
 	private bool facingRight = true;
 	private bool jump = false;
 
+
+	public Renderer rend;
+
 	// Use this for initialization
 	void Start () {
 
 		rb = GetComponent<Rigidbody> ();
-		anim = GetComponent<Animator> ();
+		//anim = GetComponent<Animator> ();
 		groundCheck = gameObject.transform.Find ("GroundCheck");
 		currentSpeed = maxSpeed;
-
+		rend = GetComponent<Renderer>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+	    Weapon_system();
+		//Health_Bar ();
 		onGround = Physics.Linecast (transform.position, groundCheck.position, 1 << LayerMask.NameToLayer ("Ground"));
 
-		anim.SetBool ("OnGround", onGround);
-		anim.SetBool ("Dead", isDead);
+		//anim.SetBool ("OnGround", onGround);
+		//anim.SetBool ("Dead", isDead);
 
 		if (Input.GetButtonDown ("Jump") && onGround)
 		{
@@ -42,8 +50,10 @@ public class Player : MonoBehaviour {
 
 		if (Input.GetButtonDown ("Fire1"))
 		{
-			anim.SetTrigger ("Attack");
+			rend.material.color = Color.red;
+			//anim.SetTrigger ("Attack");
 		}
+
 	}
 
 	private void FixedUpdate()
@@ -59,7 +69,7 @@ public class Player : MonoBehaviour {
 			rb.velocity = new Vector3 (h * currentSpeed, rb.velocity.y, z * currentSpeed);
 
 			if (onGround)
-				anim.SetFloat ("Speed", Mathf.Abs (rb.velocity.magnitude));
+				//anim.SetFloat ("Speed", Mathf.Abs (rb.velocity.magnitude));
 
 			if (h > 0 && !facingRight)
 			{
@@ -81,6 +91,7 @@ public class Player : MonoBehaviour {
 				rb.position.y,
 				Mathf.Clamp (rb.position.z, minHeight, maxHeight));
 		}
+		rend.material.color = Color.black;
 	}
 
 	void Flip()
@@ -102,4 +113,21 @@ public class Player : MonoBehaviour {
 		currentSpeed = maxSpeed;
 	}
 
+	void Weapon_system () {
+		if (Trigger_Arma.Arma_1 == true){
+			rend.material.color = Color.green;
+			damage +=10;
+			health_Decrease += Trigger_Arma.DMG_ADD;
+		}
+	}
+
+	/*void Health_Bar () {
+		health -= health_Decrease * Time.DeltaTime;
+		if (Enemigo.Dead == true){
+			health += health_Increase + Enemigo.DMG;
+		}
+		if (health <= 0.0f){
+			isDead = true;
+		}
+	}*/
 }
