@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour {
 	public float health = 100;
 	public float health_Decrease;
 	public float health_Increase;
+	public Slider health_bar;
 
 	private float currentSpeed;
 	private Rigidbody rb; //Lo vamos a usar para el movimiento del personaje
@@ -37,7 +39,7 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	    Weapon_system();
-		//Health_Bar ();
+		Health_Bar ();
 		onGround = Physics.Linecast (transform.position, groundCheck.position, 1 << LayerMask.NameToLayer ("Ground"));
 
 		//anim.SetBool ("OnGround", onGround);
@@ -121,13 +123,16 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	/*void Health_Bar () {
-		health -= health_Decrease * Time.DeltaTime;
-		if (Enemigo.Dead == true){
+	void Health_Bar () {
+		health_bar.value = health;
+		health -= health_Decrease * Time.deltaTime;
+		/*if (Enemigo.Dead == true){
 			health += health_Increase + Enemigo.DMG;
-		}
+		}*/
 		if (health <= 0.0f){
 			isDead = true;
+			Debug.Log("Ha muerto");
+			health = 0;
 		}
-	}*/
+	}
 }
