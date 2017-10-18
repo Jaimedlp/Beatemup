@@ -24,7 +24,8 @@ public class Player : MonoBehaviour {
 	private bool jump = false;
 	public static bool Attack;
 
-
+	public GameObject trigger_Ataque;
+	Player_attack scriptAtaque;
 	public Renderer rend;
 
 	// Use this for initialization
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour {
 		groundCheck = gameObject.transform.Find ("GroundCheck");
 		currentSpeed = maxSpeed;
 		rend = GetComponent<Renderer>();
+		scriptAtaque = trigger_Ataque.GetComponent<Player_attack>();
 	}
 	
 	// Update is called once per frame
@@ -45,11 +47,6 @@ public class Player : MonoBehaviour {
 
 		//anim.SetBool ("OnGround", onGround);
 		//anim.SetBool ("Dead", isDead);
-
-		if (Input.GetButtonDown ("Jump") && onGround)
-		{
-			jump = true;
-		}
 
 		if (Input.GetButtonDown ("Fire1"))
 		{
@@ -85,11 +82,6 @@ public class Player : MonoBehaviour {
 				Flip ();
 			}
 
-			if (jump)
-			{
-				jump = false;
-				rb.AddForce (Vector3.up * jumpForce);
-			}
 			float minWidth = Camera.main.ScreenToWorldPoint (new Vector3 (0, 0, 10)).x; //se obtendrá el valor mínimo de X en función de la posición de la cámara
 			float maxWidth = Camera.main.ScreenToWorldPoint (new Vector3(Screen.width, 0, 10)).x;
 			rb.position = new Vector3 (Mathf.Clamp (rb.position.x, minWidth + 1, maxWidth - 1),
@@ -122,20 +114,23 @@ public class Player : MonoBehaviour {
 		if (Trigger_Arma.Arma_1 == true){
 			rend.material.color = Color.green;
 			damage +=10;
-			health_Decrease += Trigger_Arma.DMG_ADD;
+			//health_Decrease += Trigger_Arma.DMG_ADD;
 		}
 	}
 
 	void Health_Bar () {
 		health_bar.value = health;
 		health -= health_Decrease * Time.deltaTime;
-		if (Enemy_1.Dead == true){
-			health += health_Increase;
-		}
-		if (health <= 0.0f){
-			isDead = true;
-			Debug.Log("Ha muerto");
-			health = 0;
-		}
+			if (scriptAtaque.Muerto == true){
+				Debug.Log ("RecuperaVida");
+				health += health_Increase;
+				scriptAtaque.Muerto = false;
+			}
+			if (health <= 0.0f){
+				isDead = true;
+				Debug.Log("Ha muerto");
+				health = 0;
+				Destroy(gameObject);
+			}
 	}
 }

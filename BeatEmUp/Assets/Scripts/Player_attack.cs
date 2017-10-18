@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Collections.Generic;
 public class Player_attack : MonoBehaviour {
 
+	GameObject Enemy;
+	public bool Muerto;
 	// Use this for initialization
 	void Start () {
 		
@@ -14,10 +16,22 @@ public class Player_attack : MonoBehaviour {
 		
 	}
 
-	void OnTriggerStay (Collider Enemigo) {
+	void OnTriggerStay (Collider Enemigo) { 
+		Enemy = Enemigo.gameObject;
+		Enemy_1 script = Enemy.GetComponent<Enemy_1>(); 
+
+		/*if (script != null){
+			Debug.Log ("Bien");
+		}else{
+			Debug.Log ("Mal");
+		}*/
+
 		if (Player.Attack) {
-			Enemy_1.healthEnemy -= Player.damage;
-			Enemy_1.Damaged = true;
+			script.Damaged = true;
+		}
+		if (script.healthEnemy <= 0) {
+			Debug.Log("DetectadaMuerte");
+			Muerto = true;
 		}
 	}
 }

@@ -6,33 +6,40 @@ public class Enemy_1 : MonoBehaviour {
 
 	public Renderer rend;
 
-	public Transform posicion; 
+	//public Transform posicion; 
 	public Transform PJ;
 	public float speed;
 
 	public GameObject Jugador;
 	public Vector3 targetPoint;
-	public Quaternion targetRotation;
+	Quaternion targetRotation;
 
-	public static int healthEnemy = 10;
-	public static bool Dead;
+	public int healthEnemy = 10;
+	public bool Dead;
 	public int DMG = 2;
-	public static bool Damaged;
+	public bool Damaged;
 
 	public bool haAtacado;
 	public float TiempoVolverAtacar;
 	public float VolverAtacar;
 	public float velocidadVolverAtacar;
+
+	Enemigo_Attack scriptAtaqueEnemigo;
+	public GameObject Trigger_AtaqueEnemigo;
 	// Use this for initialization
 	void Start () {
-		
+		scriptAtaqueEnemigo = Trigger_AtaqueEnemigo.GetComponent<Enemigo_Attack>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Movimiento();
+		
 		Vida();
+
+	}
+	void FixedUpdate(){
 		Ataca();
+		Movimiento();
 	}
 
 	void Movimiento(){
@@ -49,18 +56,22 @@ public class Enemy_1 : MonoBehaviour {
 			Destroy (gameObject);
 		}
 		if (Damaged == true){
+			healthEnemy -= Player.damage;
 			rend.material.color = Color.red;
+			Damaged = false;
 		}
 	}
 
 	void Ataca(){
-		if (Enemigo_Attack.EstaPlayer == true){
+		if (scriptAtaqueEnemigo.EstaPlayer == true){
 		Debug.Log ("EnemigoPreparado");
 			if (haAtacado == false){
 				Player.health -= DMG;
 				Debug.Log ("Ataca");
 				haAtacado = true;
+				rend.material.color = Color.blue;
 			}else{
+				rend.material.color = Color.yellow;
 				VolverAtacar -= velocidadVolverAtacar * Time.deltaTime;
 				Debug.Log ("Recargando ataque");
 				if (VolverAtacar <= 0){

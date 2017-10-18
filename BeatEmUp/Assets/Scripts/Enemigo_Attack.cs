@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemigo_Attack : MonoBehaviour {
 
-	public static bool EstaPlayer;
+	public bool EstaPlayer;
 
 	// Use this for initialization
 	void Start () {
@@ -19,8 +19,12 @@ public class Enemigo_Attack : MonoBehaviour {
 		if (col.tag == "Player"){
 			EstaPlayer = true;
 			Debug.Log ("HaEntrado");
-		}else{
+		}
+	}
+	void OnTriggerExit (Collider col){
+		if (col.tag == "Player"){
 			EstaPlayer = false;
+			Debug.Log("HaSalido");
 		}
 	}
 }
