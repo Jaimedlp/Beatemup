@@ -8,8 +8,8 @@ public class Player : MonoBehaviour {
 	public float maxSpeed = 4;
 	public float jumpForce = 400;
 	public float minHeight, maxHeight;
-	public int damage;
-	public float health = 100;
+	public static int damage = 2;
+	public static float health = 100;
 	public float health_Decrease;
 	public float health_Increase;
 	public Slider health_bar;
@@ -22,6 +22,7 @@ public class Player : MonoBehaviour {
 	private bool isDead = false; //Verificar si el player está muerto
 	private bool facingRight = true;
 	private bool jump = false;
+	public static bool Attack;
 
 
 	public Renderer rend;
@@ -53,9 +54,11 @@ public class Player : MonoBehaviour {
 		if (Input.GetButtonDown ("Fire1"))
 		{
 			rend.material.color = Color.red;
+			Attack = true;
 			//anim.SetTrigger ("Attack");
+		}else{
+			Attack = false;
 		}
-
 	}
 
 	private void FixedUpdate()
@@ -126,9 +129,9 @@ public class Player : MonoBehaviour {
 	void Health_Bar () {
 		health_bar.value = health;
 		health -= health_Decrease * Time.deltaTime;
-		/*if (Enemigo.Dead == true){
-			health += health_Increase + Enemigo.DMG;
-		}*/
+		if (Enemy_1.Dead == true){
+			health += health_Increase;
+		}
 		if (health <= 0.0f){
 			isDead = true;
 			Debug.Log("Ha muerto");
