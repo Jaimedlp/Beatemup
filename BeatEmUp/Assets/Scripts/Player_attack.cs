@@ -26,10 +26,10 @@ public class Player_attack : MonoBehaviour {
 			Debug.Log ("Mal");
 		}*/
 
-		if (Player.Attack) {
+		if (script != null && Player.Attack) {
 			script.Damaged = true;
 		}
-		if (script.healthEnemy <= 0) {
+		if (script != null && script.healthEnemy <= 0) {
 			Debug.Log("DetectadaMuerte");
 			Muerto = true;
 		}
