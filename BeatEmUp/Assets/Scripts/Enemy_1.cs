@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Enemy_1 : MonoBehaviour {
 
@@ -86,11 +87,18 @@ public class Enemy_1 : MonoBehaviour {
                 Destroy (gameObject);
 				UIManager.score += 50; //Cuando la animación muerte desaparezca -> puntos extra
 				FindObjectOfType<Player>().health += 30; // Cuando se coja la cosa roja -> se recupera la vida
-				PlaySong(deathSound);
-				//music.PlaySong (music.levelClearSong); //cuando acabe el nivel -> la música se cambiará para indicarlo.
+				//PlaySong(deathSound);
+				SceneManager.LoadScene (1); // Para cargar la escena de victoria.
+				//Invoke("LoadScene", 3f);
 
             }
         }
+
+		/*if (healthEnemy <= 0)
+		{
+			PlaySong (deathSound);
+		}*/
+
 		if (Damaged == true){
 			healthEnemy -= Ninja.damage;
 
@@ -145,4 +153,9 @@ public class Enemy_1 : MonoBehaviour {
 			PlaySong (deathSound);
 		}
 	}
+
+	/*void LoadScene()
+	{
+		SceneManager.LoadScene (SceneManager.GetActiveScene().buildIndex + 1);
+	}*/
 }

@@ -20,9 +20,14 @@ public class Player : MonoBehaviour {
 
 	public Animator animaciones;
 
-	public AudioClip collisionSound, polloItem, trailSound, deathSound;
+	public AudioClip collisionSound, polloItem, trailSound, deathSound, fireSound;
 	private AudioSource audioS;
 	private MusicController music;
+
+	public Transform firePoint;
+	public GameObject fireBall;
+
+	public UIManager Life;
 
 	private float currentSpeed;
 	private Rigidbody rb; //Lo vamos a usar para el movimiento del personaje
@@ -60,6 +65,8 @@ public class Player : MonoBehaviour {
 
 		audioS = GetComponent<AudioSource> ();
 		music = FindObjectOfType<MusicController> ();
+
+		Life = GameObject.FindObjectOfType (typeof(UIManager)) as UIManager;
 	}
 
     public bool triedHit = false;
@@ -113,6 +120,17 @@ public class Player : MonoBehaviour {
                 animaciones.SetBool("Ataca", false);
                 countdownAttack = countdownAttackVuelta;
             }
+
+			if (Input.GetKeyDown (KeyCode.Space) && !Attack)
+			{
+				Instantiate (fireBall, firePoint.position, firePoint.rotation);
+				//PlaySong (fireSound); // LO PONGO -> NO ATACA, LO QUITO -> SÍ ATACA
+			}
+
+			/*if (Input.GetButtonDown ("Fire1") && !Attack)
+			{
+				PlaySong (trailSound);
+			}*/
         }
     }
 
@@ -178,23 +196,33 @@ public class Player : MonoBehaviour {
 		if (Trigger_Arma.Arma_1 == true){
 			//rend.material.color = Color.green;
 			damage +=10;
-			PlaySong (trailSound);
+			//PlaySong (trailSound);
 			//health_Decrease += Trigger_Arma.DMG_ADD;
 		}
 	}
 
-	void Health_Bar () {
+	public void Health_Bar () {
 		health_bar.value = health;
 		health -= health_Decrease * Time.deltaTime;
 			if (health <= 0){
-				isDead = true;
-				Debug.Log("HemosMuerto");
+				//isDead = true;
+				health += 100;
+			FindObjectOfType<UIManager> ().UpdateLives();
+			//Life.UpdateLives();
+			/*if (facingRight) {
+				rb.AddForce (new Vector3 (-3, 5, 0), ForceMode.Impulse);
+			} else {
+				rb.AddForce (new Vector3 (3, 5, 0), ForceMode.Impulse);
+			}*/
+
+
+				//Debug.Log("HemosMuerto");
 				//health = 0;
 				//Destroy(gameObject);
 			}
-			if (health > 100){
-				health = 100;
-			}
+		if (health > 100) {
+			health = 100;
+		}
 	}
 
     public float hitStopDuration = .1f;
@@ -232,6 +260,14 @@ public class Player : MonoBehaviour {
 				PlaySong(polloItem);
 				Debug.Log("Cogido");
 			}
+		}
+	}
+
+	void ThrowFireBall()
+	{
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			Instantiate(fireBall, transform.position, transform.rotation);
 		}
 	}
 
